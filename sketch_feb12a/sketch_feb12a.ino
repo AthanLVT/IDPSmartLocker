@@ -29,7 +29,7 @@ void setup() {
   pinMode(A3, INPUT);
   pinMode(13, OUTPUT);
   pinMode(12, OUTPUT);
-  pinMode(7, INPUT);
+  pinMode(7, INPUT_PULLUP);
   Serial.begin(9600);
   Serial.println("test");
 
@@ -221,6 +221,7 @@ void resetPass()
   {
 
     //if pressing * again, cancel the reset.
+    Serial.println("Exiting Password Reset: Exit Button");
     return;
   }
   else if(inv1 > 28 && inv1 < 60)
@@ -249,6 +250,8 @@ void resetPass()
 
   if(Rtimer >= 150)
   {
+    Serial.println("");
+    Serial.println("Exiting Password Reset: Timeout");
     bothLight();
     Rtimer = 0;
     return;
@@ -274,8 +277,9 @@ void resetPass()
     //if yes store in mem
     if(Rcheck == 4)
     {
+      Serial.println("");
+      Serial.println("Password Reset Successfully");
       greenLight();
-      resetting = -1; 
 
       EEPROM.update(add0, Rcode[0]);
       EEPROM.update(add1, Rcode[1]);
@@ -292,6 +296,8 @@ void resetPass()
     }
     else
     {
+      Serial.println("");
+      Serial.println("Try a different Password");
       resCount = 0;
     }
     //if not reset counter and new code red
@@ -354,7 +360,7 @@ void loop() {
     return; //to ignore keypad when unlocked
   }
 
-  if(digitalRead(7) == HIGH)
+  if(digitalRead(7) == LOW)
   {
     RESBUT++;
   }
