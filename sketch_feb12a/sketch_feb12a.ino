@@ -36,6 +36,62 @@ void lockServo()
   holdServo(lockNeg90Deg, 100);
 }
 
+void redLight()
+{
+        digitalWrite(12, HIGH);
+        delay(300);
+        digitalWrite(12, LOW);
+        delay(300);
+        digitalWrite(12, HIGH);
+        delay(300);
+        digitalWrite(12, LOW);
+        delay(300);
+        digitalWrite(12, HIGH);
+        delay(300);
+        digitalWrite(12, LOW);
+}
+
+void greenLight()
+{
+          digitalWrite(13, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          delay(300);
+          digitalWrite(13, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          delay(300);
+          digitalWrite(13, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+}
+
+void bothLight()
+{
+          digitalWrite(13, HIGH);
+          digitalWrite(12, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          digitalWrite(12, LOW);
+          delay(300);
+          digitalWrite(13, HIGH);
+          digitalWrite(12, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          digitalWrite(12, LOW);
+          delay(300);
+          digitalWrite(13, HIGH);
+          digitalWrite(12, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          digitalWrite(12, LOW);
+}
+
+void resetPass()
+{
+  
+}
+
 //make pin 2 lock button
 const int lockButtonPin = 2;
 
@@ -50,6 +106,7 @@ static int counter = 0;
 static int code[4];
 static bool previousin = false;
 static bool lastloop = false;
+static int pinPCount = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -74,6 +131,18 @@ lockServo();   //start at locked position
 void loop() {
   if (state == UNLOCKED)
   {
+    if(pinPCount >= 3)
+    {
+      pinPCount = 0;
+      bothLight();
+      resetPass();
+    }
+    int pinP = analogRead(A0) / 9;
+    if(pinP > 5 && pinP < 28)
+    {
+      pinPCount++;
+      delay(1000);
+    }
     if (digitalRead(lockButtonPin) == LOW)
     {
       Serial.println("Lock button pressed -> LOCKED");
@@ -165,7 +234,7 @@ void loop() {
   }//row 4
   else if(inv1 > 5 && inv1 < 28)
   {
-    //
+    code[counter] = 10;
   }
   else if(inv1 > 28 && inv1 < 60)
   {
@@ -215,17 +284,7 @@ void loop() {
           Serial.println("");
           Serial.println("----- Correct -----");
           Serial.println("----- UNLOCKED -----");
-          digitalWrite(13, HIGH);
-          delay(300);
-          digitalWrite(13, LOW);
-          delay(300);
-          digitalWrite(13, HIGH);
-          delay(300);
-          digitalWrite(13, LOW);
-          delay(300);
-          digitalWrite(13, HIGH);
-          delay(300);
-          digitalWrite(13, LOW);
+          greenLight();
           unlockServo();
           state = UNLOCKED;
       }
@@ -233,17 +292,7 @@ void loop() {
       {
         Serial.println("");
         Serial.println("----- Incorrect -----");
-        digitalWrite(12, HIGH);
-        delay(300);
-        digitalWrite(12, LOW);
-        delay(300);
-        digitalWrite(12, HIGH);
-        delay(300);
-        digitalWrite(12, LOW);
-        delay(300);
-        digitalWrite(12, HIGH);
-        delay(300);
-        digitalWrite(12, LOW);
+        redLight();
       }
   }
   lastloop = previousin;
