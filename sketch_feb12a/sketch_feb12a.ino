@@ -61,6 +61,8 @@ void setup() {
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
   pinMode(A3, INPUT);
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
   Serial.begin(9600);
   Serial.println("test");
 
@@ -123,61 +125,65 @@ void loop() {
 
 
   if(previousin && !lastloop){
+    bool pound = false;
   //row 1
-  if(inv4 > 0 && inv4 < 30)
+  if(inv4 > 5 && inv4 < 28)
   {
     code[counter] = 1;
   }
-  else if(inv4 > 30 && inv4 < 60)
+  else if(inv4 > 28 && inv4 < 60)
   {
     code[counter] = 2;
   }
-  else if(inv4 > 60 && inv4 < 120)
+  else if(inv4 > 60 && inv4 < 110)
   {
     code[counter] = 3;
   }//row 2
-  else if(inv3 > 0 && inv3 < 30)
+  else if(inv3 > 3 && inv3 < 20)
   {
     code[counter] = 4;
   }
-  else if(inv3 > 30 && inv3 < 60)
+  else if(inv3 > 20 && inv3 < 44)
   {
     code[counter] = 5;
   }
-  else if(inv3 > 60 && inv3 < 120)
+  else if(inv3 > 44 && inv3 < 80)
   {
     code[counter] = 6;
   }//row 3
-  else if(inv2 > 0 && inv2 < 30)
+  else if(inv2 > 0 && inv2 < 15)
   {
     code[counter] = 7;
   }
-  else if(inv2 > 30 && inv2 < 60)
+  else if(inv2 > 15 && inv2 < 42)
   {
     code[counter] = 8;
   }
-  else if(inv2 > 60 && inv2 < 120)
+  else if(inv2 > 42 && inv2 < 80)
   {
     code[counter] = 9;
   }//row 4
-  else if(inv1 > 0 && inv1 < 30)
+  else if(inv1 > 5 && inv1 < 28)
   {
-    return;
+    //
   }
-  else if(inv1 > 30 && inv1 < 60)
+  else if(inv1 > 28 && inv1 < 60)
   {
     code[counter] = 0;
   }
-  else if(inv1 > 60 && inv1 < 120)
+  else if(inv1 > 60 && inv1 < 110)
   {
-    counter = 0;
-    Serial.println("Reset");
-    return;
+    counter = -1;
+    Serial.println("");
+    Serial.println("----- Reset -----");
+    pound = true;
   }
 
-
+  if(!pound){
   Serial.print(code[counter]);
+  }
   counter++;
+  pound = false;
   }
 
 
@@ -206,13 +212,38 @@ void loop() {
 
       if(check == 4)
       {
-          Serial.println("Correct --> UNLOCKED");
+          Serial.println("");
+          Serial.println("----- Correct -----");
+          Serial.println("----- UNLOCKED -----");
+          digitalWrite(13, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          delay(300);
+          digitalWrite(13, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
+          delay(300);
+          digitalWrite(13, HIGH);
+          delay(300);
+          digitalWrite(13, LOW);
           unlockServo();
           state = UNLOCKED;
       }
       else
       {
-        Serial.println("Incorrect");
+        Serial.println("");
+        Serial.println("----- Incorrect -----");
+        digitalWrite(12, HIGH);
+        delay(300);
+        digitalWrite(12, LOW);
+        delay(300);
+        digitalWrite(12, HIGH);
+        delay(300);
+        digitalWrite(12, LOW);
+        delay(300);
+        digitalWrite(12, HIGH);
+        delay(300);
+        digitalWrite(12, LOW);
       }
   }
   lastloop = previousin;
