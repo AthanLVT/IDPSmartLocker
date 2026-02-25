@@ -31,7 +31,7 @@ void setup() {
   pinMode(12, OUTPUT);
   pinMode(7, INPUT_PULLUP);
   Serial.begin(9600);
-  Serial.println("test");
+  Serial.println("Start-up");
 
   
 
@@ -352,7 +352,7 @@ void loop() {
     }
     if (digitalRead(lockButtonPin) == LOW)
     {
-      Serial.println("Lock button pressed -> LOCKED");
+      Serial.println("----- LOCKED -----");
       lockServo();
       state = LOCKED;
       counter = 0; //reset counter
