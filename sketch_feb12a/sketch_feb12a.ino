@@ -130,12 +130,22 @@ void bothLight()
 static int resetting = 1;
 static int resCount = 0;
 static int Rcode[4];
+static int Tcode[4];
 static bool Rpreviousin = false;
 static bool Rlastloop = false;
 static int Rtimer = 0;
 
 void resetPass()
 {
+  Rpreviousin = false;
+  Rlastloop = false; 
+  Rtimer = 0;
+  resCount = 0; 
+  Rcode[0] = Tcode[0];
+  Rcode[1] = Tcode[1];
+  Rcode[2] = Tcode[2];
+  Rcode[3] = Tcode[3];
+ 
   Serial.println("Resetting Password");
   while(resetting == 1)
   {
@@ -175,6 +185,7 @@ void resetPass()
   if(val > 0 && !Rpreviousin)
   {
     Rpreviousin = true;
+    Rtimer = 0;
   }
 
 
@@ -221,7 +232,9 @@ void resetPass()
   {
 
     //if pressing * again, cancel the reset.
+    Serial.println("");
     Serial.println("Exiting Password Reset: Exit Button");
+    resCount = 0;
     return;
   }
   else if(inv1 > 28 && inv1 < 60)
@@ -254,6 +267,7 @@ void resetPass()
     Serial.println("Exiting Password Reset: Timeout");
     bothLight();
     Rtimer = 0;
+    resCount = 0;
     return;
   }
 
